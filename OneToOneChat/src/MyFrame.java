@@ -162,9 +162,12 @@ public class MyFrame extends JFrame implements ActionListener {
             connectIP.setEditable(!clientIsConnected);
             connect.setEnabled(!clientIsConnected);
             send.setEnabled(true);
+        } catch (UnknownHostException e) {
+            System.out.println("錯誤的IP位置");
+             JOptionPane.showMessageDialog(MyFrame.this, "錯誤的IP位置，請重新輸入", "錯誤訊息", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ioe) {
-             System.out.println("此IP無法連結");
-             JOptionPane.showMessageDialog(MyFrame.this,"此IP位置無法連結，請重新輸入","錯誤訊息",JOptionPane.ERROR_MESSAGE);
+            System.out.println("此IP無法連結");
+            JOptionPane.showMessageDialog(MyFrame.this, "此IP位置無法連結，請重新輸入", "錯誤訊息", JOptionPane.ERROR_MESSAGE);
         }
     }
 

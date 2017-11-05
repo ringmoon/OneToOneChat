@@ -8,13 +8,9 @@ public class Client  {
 
     private Socket socket;
 
-    public Client(String ip, int port) throws IOException {
-        try {
-            socket = new Socket(ip, port);
-        }catch(UnknownHostException e){
-            e.printStackTrace();
-           e.printStackTrace();
-        }
+    public Client(String ip, int port) throws IOException,UnknownHostException {
+       socket = new Socket(ip, port);
+        
     }
     public Socket getSocket(){
         return socket;
