@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -170,15 +172,17 @@ public class MyFrame extends JFrame implements ActionListener {
         if (command.equals("開始連線")) {
             clientConnectServer(connectIP.getText());
         } else if (command.equals("送出")) {
-            if(chatInputWindow.getText().equals("")){
-                JOptionPane.showMessageDialog(MyFrame.this,"請輸入聊天內容", "錯誤訊息",
+            if (chatInputWindow.getText().equals("")) {
+                JOptionPane.showMessageDialog(MyFrame.this, "請輸入聊天內容", "錯誤訊息",
                         JOptionPane.ERROR_MESSAGE);
-                return ;
+                return;
             }
             chatWindow.append(name + ": " + chatInputWindow.getText() + "\n");
             writer.println(name + ": " + chatInputWindow.getText());
             writer.flush();
             chatInputWindow.setText("");
+            // 使jsp每次都自動滾動到最後一行
+            chatWindowBar.setValue(chatWindowBar.getMaximum());
         }
     }
 }

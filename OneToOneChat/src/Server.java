@@ -30,4 +30,7 @@ public class Server extends Thread {
     public Socket getSocket() {
         return socket;
     }
+     public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
 }
