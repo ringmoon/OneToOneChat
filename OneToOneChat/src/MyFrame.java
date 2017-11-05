@@ -26,13 +26,13 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private JTextField connectIP;
     private JTextField tfMyName;
-    private JScrollBar chatWindowBar ;
+    private JScrollBar chatWindowBar;
     private JButton connect;
     private JLabel myIP;
     private JLabel lbMyName;
     private JLabel targetIP;
     private JTextArea chatWindow;
-    private JTextArea chatInputWindow;
+    private JTextField chatInputWindow;
     private JButton send;
     private Server myServer;
     private Client myClient;
@@ -46,7 +46,7 @@ public class MyFrame extends JFrame implements ActionListener {
         //UI設計
         connectIP = new JTextField("127.0.0.1", 12);
         tfMyName = new JTextField("帥哥", 8);
-        chatInputWindow = new JTextArea(8,30);
+        chatInputWindow = new JTextField(25);
         connect = new JButton("開始連線");
         send = new JButton("送出");
         send.setEnabled(false);
@@ -71,7 +71,7 @@ public class MyFrame extends JFrame implements ActionListener {
         chatWindow.setWrapStyleWord(true);
         JScrollPane jsp = new JScrollPane(chatWindow);
         // 取得scrollBar
-        chatWindowBar= jsp.getVerticalScrollBar();
+        chatWindowBar = jsp.getVerticalScrollBar();
         JPanel panel3 = new JPanel();
         panel3.add(jsp);
         panel3.add(chatInputWindow);
@@ -102,7 +102,7 @@ public class MyFrame extends JFrame implements ActionListener {
                 if (myServer.getSocket() != null && myServer.getSocket().isConnected()) {
                     try {
                         JOptionPane.showMessageDialog(MyFrame.this, "有Client要連接此Server",
-                                 "請選擇", JOptionPane.INFORMATION_MESSAGE);
+                                "請選擇", JOptionPane.INFORMATION_MESSAGE);
                         serverSocket = myServer.getSocket();
                         chatWindow.append("執行狀態：他機Client連本機Server連線成功\n");
                         chatWindow.append("-----------------------------"
@@ -152,6 +152,10 @@ public class MyFrame extends JFrame implements ActionListener {
             chatWindow.append("IP: " + clientSocket.getLocalAddress().toString()
                     + "連到IP: " + clientSocket.getInetAddress() + "\n");
             chatWindow.append("你使用的名字是 :" + name + "\n");
+            chatWindow.append("-----------------------------"
+                    + "------------------------------------"
+                    + "------------------------------------"
+                    + "------------------------------------\n");
             tfMyName.setEditable(!clientIsConnected);
             connectIP.setEditable(!clientIsConnected);
             connect.setEnabled(!clientIsConnected);
@@ -166,9 +170,14 @@ public class MyFrame extends JFrame implements ActionListener {
         if (command.equals("開始連線")) {
             clientConnectServer(connectIP.getText());
         } else if (command.equals("送出")) {
+            if(chatInputWindow.getText().equals("")){
+                JOptionPane.showMessageDialog(MyFrame.this,"請輸入聊天內容", "錯誤訊息",
+                        JOptionPane.ERROR_MESSAGE);
+                return ;
+            }
             chatWindow.append(name + ": " + chatInputWindow.getText() + "\n");
             writer.println(name + ": " + chatInputWindow.getText());
-            writer.flush(); 
+            writer.flush();
             chatInputWindow.setText("");
         }
     }
