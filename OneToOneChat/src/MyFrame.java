@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -25,12 +26,13 @@ public class MyFrame extends JFrame implements ActionListener {
 
     private JTextField connectIP;
     private JTextField tfMyName;
+    private JScrollBar chatWindowBar ;
     private JButton connect;
     private JLabel myIP;
     private JLabel lbMyName;
     private JLabel targetIP;
     private JTextArea chatWindow;
-    private JTextField chatInputWindow;
+    private JTextArea chatInputWindow;
     private JButton send;
     private Server myServer;
     private Client myClient;
@@ -44,9 +46,10 @@ public class MyFrame extends JFrame implements ActionListener {
         //UI設計
         connectIP = new JTextField("127.0.0.1", 12);
         tfMyName = new JTextField("帥哥", 8);
-        chatInputWindow = new JTextField(20);
+        chatInputWindow = new JTextArea(8,30);
         connect = new JButton("開始連線");
         send = new JButton("送出");
+        send.setEnabled(false);
         myIP = new JLabel("我的IP : ");
         myIP.setFont(new Font("標楷體", Font.BOLD, 24));
         lbMyName = new JLabel("我的名字 : ");
@@ -60,13 +63,15 @@ public class MyFrame extends JFrame implements ActionListener {
         panel.add(targetIP);
         panel.add(connectIP);
         panel.add(connect);
-        panel.setPreferredSize(new Dimension(0, 80));
+        panel.setPreferredSize(new Dimension(0, 50));
         add(panel2, BorderLayout.SOUTH);
         add(panel, BorderLayout.NORTH);
         chatWindow.setEditable(false);
         chatWindow.setLineWrap(true);
         chatWindow.setWrapStyleWord(true);
         JScrollPane jsp = new JScrollPane(chatWindow);
+        // 取得scrollBar
+        chatWindowBar= jsp.getVerticalScrollBar();
         JPanel panel3 = new JPanel();
         panel3.add(jsp);
         panel3.add(chatInputWindow);
@@ -96,10 +101,14 @@ public class MyFrame extends JFrame implements ActionListener {
                 }
                 if (myServer.getSocket() != null && myServer.getSocket().isConnected()) {
                     try {
-                        JOptionPane.showMessageDialog(MyFrame.this, "有Client要連接此Server"
-                        ,"請選擇",JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(MyFrame.this, "有Client要連接此Server",
+                                 "請選擇", JOptionPane.INFORMATION_MESSAGE);
                         serverSocket = myServer.getSocket();
                         chatWindow.append("執行狀態：他機Client連本機Server連線成功\n");
+                        chatWindow.append("-----------------------------"
+                                + "------------------------------------"
+                                + "------------------------------------"
+                                + "------------------------------------\n");
                         reader = new BufferedReader(new InputStreamReader(serverSocket.getInputStream(), "UTF-8"));
                         serverIsConnected = true;
                         //聊天訊息更新執行緒
@@ -123,6 +132,8 @@ public class MyFrame extends JFrame implements ActionListener {
             try {
                 while ((message = reader.readLine()) != null) {
                     chatWindow.append(message + "\n");
+                    // 使jsp每次都自動滾動到最後一行
+                    chatWindowBar.setValue(chatWindowBar.getMaximum());
                 }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -140,10 +151,11 @@ public class MyFrame extends JFrame implements ActionListener {
             chatWindow.append("執行狀態：本機Client連他機Server連線成功\n");
             chatWindow.append("IP: " + clientSocket.getLocalAddress().toString()
                     + "連到IP: " + clientSocket.getInetAddress() + "\n");
-            chatWindow.append("你使用的名字是 :"+name+"\n");
+            chatWindow.append("你使用的名字是 :" + name + "\n");
             tfMyName.setEditable(!clientIsConnected);
             connectIP.setEditable(!clientIsConnected);
             connect.setEnabled(!clientIsConnected);
+            send.setEnabled(true);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -156,7 +168,8 @@ public class MyFrame extends JFrame implements ActionListener {
         } else if (command.equals("送出")) {
             chatWindow.append(name + ": " + chatInputWindow.getText() + "\n");
             writer.println(name + ": " + chatInputWindow.getText());
-            writer.flush();
+            writer.flush(); 
+            chatInputWindow.setText("");
         }
     }
 }
