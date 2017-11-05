@@ -163,7 +163,8 @@ public class MyFrame extends JFrame implements ActionListener {
             connect.setEnabled(!clientIsConnected);
             send.setEnabled(true);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+             System.out.println("此IP無法連結");
+             JOptionPane.showMessageDialog(MyFrame.this,"此IP位置無法連結，請重新輸入","錯誤訊息",JOptionPane.ERROR_MESSAGE);
         }
     }
 
