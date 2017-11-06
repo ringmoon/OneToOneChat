@@ -46,6 +46,7 @@ public class MyFrame extends JFrame implements ActionListener {
 
     public MyFrame() throws UnknownHostException {
         //UI設計
+        super("一對一聊天");
         connectIP = new JTextField("127.0.0.1", 12);
         tfMyName = new JTextField("帥哥", 8);
         chatInputWindow = new JTextField(25);
